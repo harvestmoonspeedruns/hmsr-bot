@@ -1,5 +1,6 @@
 from bot.commands import BaseCommands
 
+
 class HM64RaceCommands(BaseCommands):
     betting_open = False
     bets = {}
@@ -8,27 +9,17 @@ class HM64RaceCommands(BaseCommands):
         self.commands = {
             "startrace": {
                 "kwargs": ["startrace", "startbetting"],
-                "func": self.start_race
+                "func": self.start_race,
             },
-            "endrace": {
-                "kwargs": ["endrace", "endbetting"],
-                "func": self.end_race
-            },
-            "bet": {
-                "kwargs": ["bet", "dog", "horse"],
-                "func": self.bet
-            },
-            "winner": {
-                "kwargs": ["winner", "winners"],
-                "func": self.winner
-            }
+            "endrace": {"kwargs": ["endrace", "endbetting"], "func": self.end_race},
+            "bet": {"kwargs": ["bet", "dog", "horse"], "func": self.bet},
+            "winner": {"kwargs": ["winner", "winners"], "func": self.winner},
         }
 
     def start_race(self, event, channel):
         self.bets = {}
         self.betting_open = True
         return "Betting is now open. Good Luck! OhMyDog"
-
 
     def end_race(self, event, channel):
         self.betting_open = True
@@ -44,7 +35,7 @@ class HM64RaceCommands(BaseCommands):
         winners = []
         for (user, bet) in self.bets.items():
             if len(arguments) >= 2 and bet == arguments[1]:
-                winners.append("@"+user)
+                winners.append("@" + user)
 
         congrats_to = "all"
         if len(winners) == 0:
@@ -54,4 +45,6 @@ class HM64RaceCommands(BaseCommands):
         elif len(winners) == 1:
             congrats_to = "you"
 
-        return "Winners are {0}. Congrats to {1}!".format(" ".join(winners), congrats_to)
+        return "Winners are {0}. Congrats to {1}!".format(
+            " ".join(winners), congrats_to
+        )
