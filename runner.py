@@ -10,7 +10,8 @@ or in the "license" file accompanying this file. This file is distributed on an 
 
 import os
 import sys
-from multiprocessing import Process
+from queue import Queue
+from threading import Thread
 
 from bot.pastor_brown import PastorBrown
 
@@ -22,12 +23,12 @@ def main():
     channels = os.environ.get("CHANNELS").split(",")
 
     bots = {}
-    processes = []
+    q = Queue()
     for channel in channels:
         bots[channel] = PastorBrown(username, client_id, token, channel)
-        process = Process(target=bots[channel].start)
-        processes.append(process)
+        process = Thread(target=bots[channel].start)
         process.start()
+        q.put(process)
 
 
 if __name__ == "__main__":

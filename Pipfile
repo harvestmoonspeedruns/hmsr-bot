@@ -9,6 +9,7 @@ black = "*"
 [packages]
 irc = "*"
 requests = "*"
+threading = "*"
 
 [requires]
 python_version = "3.7"
