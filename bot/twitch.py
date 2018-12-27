@@ -48,7 +48,7 @@ class TwitchBot(SingleServerIRCBot):
         # If a chat message starts with an exclamation point, try to run it as a command
         if e.arguments[0][:1] == "+":
             cmd = e.arguments[0].split(" ")[0][1:].lower()
-            print("Received command:", self.channel, cmd)
+            print("Received command:", self.channel, e.arguments[0])
             self.do_command(e, cmd)
         return
 
