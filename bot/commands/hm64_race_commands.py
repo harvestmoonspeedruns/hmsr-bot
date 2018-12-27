@@ -10,10 +10,23 @@ class HM64RaceCommands(BaseCommands):
             "startrace": {
                 "kwargs": ["startrace", "startbetting"],
                 "func": self.start_race,
+                "docs": "Starts a new race, will erase existing bets and open new betting."
             },
-            "endrace": {"kwargs": ["endrace", "endbetting"], "func": self.end_race},
-            "bet": {"kwargs": ["bet", "dog", "horse"], "func": self.bet},
-            "winner": {"kwargs": ["winner", "winners"], "func": self.winner},
+            "endrace": {
+                "kwargs": ["endrace", "endbetting"],
+                "func": self.end_race,
+                "docs": "Closes the race and no new bets are allowed."
+            },
+            "bet": {
+                "kwargs": ["bet", "dog", "horse"],
+                "func": self.bet,
+                "docs": "Places a bet for that user with whatever number following command. Only 1 bet per user."
+            },
+            "winner": {
+                "kwargs": ["winner", "winners"],
+                "func": self.winner,
+                "docs": "Announces all bets who matched the number following command"
+            },
         }
 
     def start_race(self, event, channel):

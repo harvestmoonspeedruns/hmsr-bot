@@ -7,6 +7,8 @@ class CommandList(object):
 
     def __init__(self):
         self.commands = {}
+        self.commandDefinitions = {}
         classes = [Class() for Class in self._command_cls]
         for commands in classes:
             commands.register(self)
+

@@ -3,6 +3,8 @@ class BaseCommands(object):
         for title, command in self.commands.items():
             for keyword in command.get("kwargs", [title]):
                 list.commands[keyword] = command.get("func")
+                if command.get("docs"):
+                    list.commandDefinitions[keyword] = command.get("docs")
 
     @staticmethod
     def get_event_variables(event):
