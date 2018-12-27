@@ -10,4 +10,8 @@ class BaseCommands(object):
     def get_event_variables(event):
         actor = event.source.split("!")[0]
         arguments = event.arguments[0].split(" ")
-        return actor, arguments
+        badges = next(tag["value"] for tag in event.tags if tag["key"] == "badges")
+        is_mod = (
+            "broadcaster" in badges or "moderator" in badges or actor == "groteworld"
+        )
+        return actor, arguments, is_mod
