@@ -1,7 +1,7 @@
 class BaseCommands(object):
     def register(self, list):
-        for command in self.commands.values():
-            for keyword in command.get("kwargs"):
+        for title, command in self.commands.items():
+            for keyword in command.get("kwargs", [title]):
                 list.commands[keyword] = command.get("func")
 
     @staticmethod
