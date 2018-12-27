@@ -20,8 +20,13 @@ class PastorBrown(TwitchBot):
         self.previousCommands = {}
 
     def do_command(self, e, cmd):
-        if cmd in self.command_list.commands.keys() and (cmd not in self.previousCommands or datetime.datetime.now() > self.previousCommands[cmd]):
+        if cmd in self.command_list.commands.keys() and (
+            cmd not in self.previousCommands
+            or datetime.datetime.now() > self.previousCommands[cmd]
+        ):
             message = self.command_list.commands[cmd](e, self.channel)
             if message:
-                self.previousCommands[cmd] = datetime.datetime.now() + datetime.timedelta(0,10)
+                self.previousCommands[
+                    cmd
+                ] = datetime.datetime.now() + datetime.timedelta(0, 10)
                 self.send(message)

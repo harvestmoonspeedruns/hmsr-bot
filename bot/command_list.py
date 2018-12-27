@@ -11,4 +11,3 @@ class CommandList(object):
         classes = [Class() for Class in self._command_cls]
         for commands in classes:
             commands.register(self)
-
