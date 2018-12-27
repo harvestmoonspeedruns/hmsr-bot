@@ -1,5 +1,6 @@
 import os
 import sys
+from multiprocessing import Process
 
 from bot.pastor_brown import PastorBrown
 
@@ -10,9 +11,14 @@ def main():
     channels = os.environ.get("CHANNELS").split(",")
 
     bots = {}
+    processes = []
     for channel in channels:
         bots[channel] = PastorBrown(username, client_id, token, channel)
-        bots[channel].start()
+        process = Process(target=bots[channel].start)
+        processes.append(process)
+        process.start()
+
+
 
 if __name__ == "__main__":
     main()
