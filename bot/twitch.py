@@ -9,26 +9,26 @@ or in the "license" file accompanying this file. This file is distributed on an 
 '''
 
 import sys
-import irc.bot
 import requests
+from irc.bot import SingleServerIRCBot
 
-class TwitchBot(irc.bot.SingleServerIRCBot):
+class TwitchBot(SingleServerIRCBot):
     def __init__(self, username, client_id, token, channel):
         self.client_id = client_id
         self.token = token
         self.channel = '#' + channel
 
-        # Get the channel id, we will need this for v5 API calls
-        url = 'https://api.twitch.tv/kraken/users?login=' + channel
-        headers = {'Client-ID': client_id, 'Accept': 'application/vnd.twitchtv.v5+json'}
+        # Get the channel id, we will need this for API calls
+        url = 'https://api.twitch.tv/helix/users?login=' + channel
+        headers = {'Client-ID': client_id}
         r = requests.get(url, headers=headers).json()
-        self.channel_id = r['users'][0]['_id']
+        self.channel_id = r['data'][0]['id']
 
         # Create IRC bot connection
         server = 'irc.chat.twitch.tv'
         port = 6667
         print('Connecting to ' + server + ' on port ' + str(port) + '...')
-        irc.bot.SingleServerIRCBot.__init__(self, [(server, port, 'oauth:'+token)], username, username)
+        SingleServerIRCBot.__init__(self, [(server, port, 'oauth:'+token)], username, username)
 
 
     def on_welcome(self, c, e):
@@ -45,7 +45,7 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         # If a chat message starts with an exclamation point, try to run it as a command
         if e.arguments[0][:1] == '+':
             cmd = e.arguments[0].split(' ')[0][1:].lower()
-            print('Received command: ' + cmd)
+            print('Received command:', self.channel, cmd)
             self.do_command(e, cmd)
         return
 
