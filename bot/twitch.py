@@ -1,5 +1,6 @@
 '''
 Copyright 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright 2019 Blake Grotewold <hello@grote.world>
 
 Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at
 
