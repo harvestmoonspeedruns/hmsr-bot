@@ -9,6 +9,8 @@ or in the "license" file accompanying this file. This file is distributed on an 
 """
 
 import datetime
+from threading import Timer
+
 from bot.twitch import TwitchBot
 from bot.command_list import CommandList
 
@@ -18,6 +20,17 @@ class PastorBrown(TwitchBot):
         super().__init__(username, client_id, token, channel)
         self.command_list = CommandList()
         self.previousCommands = {}
+
+        PastorBrown.setInterval(60, self.check_for_reminders)
+
+    @staticmethod
+    def setInterval(timer, task):
+        task()
+        Timer(timer, PastorBrown.setInterval, [timer, task]).start()
+
+    def check_for_reminders(self):
+        message = self.command_list.commands.get("say_reminders")()
+        if message: self.send(message)
 
     def do_command(self, e, cmd):
         if cmd in self.command_list.commands.keys() and (

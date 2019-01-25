@@ -4,6 +4,11 @@ from bot.commands import BaseCommands
 class HM64AllPhotosInfo(BaseCommands):
     def __init__(self):
         self.commands = {
+            "photos": {
+                "docs": "URL to All Photos PasteBin",
+                "kwargs": ["photos", "photo"],
+                "func": self.messageReturner("https://pastebin.com/fdyEs4pj"),
+            },
             "grandpa": {
                 "docs": "Grandpa's Photo Information",
                 "func": self.messageReturner(
@@ -101,7 +106,7 @@ class HM64AllPhotosInfo(BaseCommands):
             "party": {
                 "docs": "Party Photo Information",
                 "func": self.messageReturner(
-                    """Party Photo: A whole laundry list of requirements:
+                    """Party Photo: Requires the following
 - Wife 250+ Affection
 - Dog 200+ Affection
 - 6 Power Berries (Technically 190 Max Stamina)
@@ -115,6 +120,3 @@ class HM64AllPhotosInfo(BaseCommands):
                 ),
             },
         }
-
-    def messageReturner(self, message):
-        return lambda e, c: message.replace("\n", " ")

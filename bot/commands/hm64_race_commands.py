@@ -36,7 +36,7 @@ class HM64RaceCommands(BaseCommands):
 
         self.bets = {}
         self.betting_open = True
-        return "Betting is now open. Good Luck! OhMyDog"
+        return "Betting is now open. Good Luck! FrankerZ vs OhMyDog vs RalpherZ vs BegWan vs ChefFrank vs CorgiDerp"
 
     def end_race(self, event, channel):
         actor, arguments, is_mod = self.get_event_variables(event)
