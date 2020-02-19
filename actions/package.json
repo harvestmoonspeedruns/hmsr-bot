@@ -1,0 +1,31 @@
+{
+  "name": "hms-actions",
+  "version": "1.0.0",
+  "description": "AWS Lambdas to support Harvest Moon Speedrunner Discord",
+  "scripts": {
+    "start": "serverless offline start",
+    "lint": "eslint .",
+    "deploy": "sls deploy --stage=prod",
+    "package": "sls package --stage=prod"
+  },
+  "author": "Blake Grotewold <hello@grote.world>",
+  "private": true,
+  "devDependencies": {
+    "eslint": "5.16.0",
+    "eslint-config-airbnb": "17.1.1",
+    "eslint-plugin-import": "2.17.3",
+    "eslint-plugin-jsx-a11y": "6.2.1",
+    "eslint-plugin-react": "7.14.2",
+    "serverless": "^1.63.0",
+    "serverless-dotenv-plugin": "^2.3.2",
+    "serverless-offline": "^5.12.1",
+    "serverless-offline-scheduler": "^0.4.0",
+    "serverless-plugin-include-dependencies": "^4.0.1",
+    "serverless-stage-manager": "^1.0.5"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "mongoose": "^5.9.1",
+    "node-fetch": "^2.6.0"
+  }
+}

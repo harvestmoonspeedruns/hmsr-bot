@@ -1,0 +1,42 @@
+service: harvestmoonspeedruns
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${opt:stage, self:custom.defaultStage}
+  region: ${opt:region, 'us-east-1'}
+  profile: ${env:SLS_PROFILE}
+  versionFunctions: false
+  memorySize: 256
+  logRetentionInDays: 30
+  environment:
+    SERVERLESS_STAGE: ${self:provider.stage}
+    SERVERLESS_VERSION: ${file(./package.json):version}
+    TWITCH_CLIENT_ID: ${env:TWITCH_CLIENT_ID}
+    TWITCH_CLIENT_SECRET: ${env:TWITCH_CLIENT_SECRET}
+    DISCORD_WEBHOOK: ${env:DISCORD_WEBHOOK}
+    DATABASE_URL: ${env:DATABASE_URL}
+
+package:
+  excludeDevDependencies: false
+
+custom:
+  defaultStage: dev
+  stages:
+    - dev
+    - prod
+  dotenv:
+    basePath: ./
+
+functions:
+  LiveNow:
+    handler: live_now.handler
+    events:
+      - schedule: rate(3 minutes)
+
+plugins:
+  - serverless-stage-manager
+  - serverless-offline
+  - serverless-dotenv-plugin
+  - serverless-offline-scheduler
+  - serverless-plugin-include-dependencies

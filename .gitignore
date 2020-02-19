@@ -1,0 +1,7 @@
+node_modules/
+.cache/
+dist/
+.env
+.webpack/
+.serverless/
+.DS_Store
