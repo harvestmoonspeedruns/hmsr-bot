@@ -22,14 +22,14 @@ const webhookOptions = (stream, user) => ({
     body: JSON.stringify({
       embeds: [
         {
-          title: games[stream.game_id],
-          description: `${stream.title}\n\n[Go to Stream](https://twitch.tv/${stream.user_name})`,
+          title: user.display_name,
+          description: `${stream.title}\n\nhttps://twitch.tv/${stream.user_name}`,
           url: `https://twitch.tv/${stream.user_name}`,
           color: 6908265,
           timestamp: new Date(stream.started_at).toISOString(),
           footer: { text: "Live" },
           author: {
-            name: `[Twitch Stream] ${user.display_name}`
+            name: `[Twitch Stream] ${games[stream.game_id]}`
           },
           thumbnail: {
             url: user.profile_image_url
@@ -39,7 +39,7 @@ const webhookOptions = (stream, user) => ({
     })
 });
 
-const searchWords = ['%', 'il', 'runs', 'run', 'speedrun', 'speedruns', 'routing', 'race', 'tas', 'tasing', 'marriage%', 'any%', '100%', '98%', '101', 'hmsr'];
+const searchWords = ['wr', '%', 'il', 'runs', 'run', 'speedrun', 'speedruns', 'routing', 'race', 'tas', 'tasing', 'marriage%', 'any%', '100%', '98%', '101', 'hmsr'];
 
 function getUserProfilePicture(userId) {
   const options = { headers: { 'Client-Id': process.env.TWITCH_CLIENT_ID } };
@@ -73,7 +73,10 @@ function newStreamCreater(stream, previous) {
 
 function checkStreamIsPublished(stream) {
   const sanitizedTitleWords = stream.title.toLowerCase().replace(/[^%\w]/g, ' ').trim().split(' ');
-  if (sanitizedTitleWords.filter(w => searchWords.includes(w)).length > 0) { // is speedrunner
+  if (sanitizedTitleWords.includes('nohmsr')) { // does not wish to notify the discord, just return
+	return;
+  }
+  else if (sanitizedTitleWords.filter(w => searchWords.includes(w)).length > 0) { // is speedrunner
     return models.Stream.findOne({ streamId: stream.id }).then((prev) => {
       return newStreamCreater(stream, prev);
     });
