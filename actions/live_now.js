@@ -39,7 +39,7 @@ const webhookOptions = (stream, user) => ({
     })
 });
 
-const searchWords = ['wr', '%', 'il', 'runs', 'run', 'speedrun', 'speedruns', 'routing', 'race', 'tas', 'tasing', 'marriage%', 'any%', '100%', '98%', '101', 'hmsr'];
+const searchWords = ['wr', '%', 'il', 'speedrun', 'speedruns', 'routing', 'race', 'tas', 'tasing', 'marriage%', 'any%', '100%', '98%', '101', 'hmsr'];
 const avoidWords = ['nohmsr'];
 
 function getUserProfilePicture(userId) {
