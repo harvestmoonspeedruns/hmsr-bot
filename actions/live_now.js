@@ -73,7 +73,10 @@ function newStreamCreater(stream, previous) {
 
 function checkStreamIsPublished(stream) {
   const sanitizedTitleWords = stream.title.toLowerCase().replace(/[^%\w]/g, ' ').trim().split(' ');
-  if (sanitizedTitleWords.filter(w => searchWords.includes(w)).length > 0) { // is speedrunner
+  if (sanitizedTitleWords.includes('nohmsr')) { // does not wish to notify the discord, just return
+	return;
+  }
+  else if (sanitizedTitleWords.filter(w => searchWords.includes(w)).length > 0) { // is speedrunner
     return models.Stream.findOne({ streamId: stream.id }).then((prev) => {
       return newStreamCreater(stream, prev);
     });
