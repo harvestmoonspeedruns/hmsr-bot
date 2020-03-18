@@ -6,37 +6,37 @@ const games = require('./games.json');
 const authOptions = {
   method: 'POST',
   headers: {
-    "Content-Type": "application/json"
+    'Content-Type': 'application/json'
   }
 };
 const authQueryString = `?client_id=${process.env.TWITCH_CLIENT_ID}&client_secret=${process.env.TWITCH_CLIENT_SECRET}&grant_type=client_credentials`;
-const twitchAuthEndpoint = `https://id.twitch.tv/oauth2/token${authQueryString}`
+const twitchAuthEndpoint = `https://id.twitch.tv/oauth2/token${authQueryString}`;
 const streamsAPIEndpoint = game => `https://api.twitch.tv/helix/streams?game_id=${game}`;
 const usersAPIEndpoint = userId => `https://api.twitch.tv/helix/users?id=${userId}`;
 const discordWebhookEndpoint = process.env.DISCORD_WEBHOOK;
 const webhookOptions = (stream, user) => ({
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      embeds: [
-        {
-          title: user.display_name,
-          description: `${stream.title}\n\nhttps://twitch.tv/${stream.user_name}`,
-          url: `https://twitch.tv/${stream.user_name}`,
-          color: 6908265,
-          timestamp: new Date(stream.started_at).toISOString(),
-          footer: { text: "Live" },
-          author: {
-            name: `[Twitch Stream] ${games[stream.game_id]}`
-          },
-          thumbnail: {
-            url: user.profile_image_url
-          }
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    embeds: [
+      {
+        title: user.display_name,
+        description: `${stream.title}\n\nhttps://twitch.tv/${stream.user_name}`,
+        url: `https://twitch.tv/${stream.user_name}`,
+        color: 6908265,
+        timestamp: new Date(stream.started_at).toISOString(),
+        footer: { text: 'Live' },
+        author: {
+          name: `[Twitch Stream] ${games[stream.game_id]}`
+        },
+        thumbnail: {
+          url: user.profile_image_url
         }
-      ]
-    })
+      }
+    ]
+  })
 });
 
 const searchWords = ['wr', '%', 'il', 'speedrun', 'speedruns', 'routing', 'race', 'tas', 'tasing', 'marriage%', 'any%', '100%', '98%', '101', 'hmsr'];
@@ -70,19 +70,18 @@ function newStreamCreater(stream, previous) {
       });
     });
   }
+  return Promise.resolve();
 }
 
 function checkStreamIsPublished(stream) {
   const sanitizedTitleWords = stream.title.toLowerCase().replace(/[^%\w]/g, ' ').trim().split(' ');
-  if (sanitizedTitleWords.filter(w => avoidWords.includes(w)).length > 0) { // does not wish to notify the discord
-	  return;
+  if (sanitizedTitleWords.filter(w => avoidWords.includes(w)).length > 0) { // exclude me
+    return;
   }
-  else if (sanitizedTitleWords.filter(w => searchWords.includes(w)).length > 0) { // is speedrunner
-    return models.Stream.findOne({ streamId: stream.id }).then((prev) => {
-      return newStreamCreater(stream, prev);
-    });
+  if (sanitizedTitleWords.filter(w => searchWords.includes(w)).length > 0) { // is speedrunner
+    models.Stream.findOne({ streamId: stream.id })
+      .then(prev => newStreamCreater(stream, prev));
   }
-  return Promise.resolve();
 }
 
 function getStream(streams) {
@@ -98,10 +97,10 @@ function handler(event, context) {
   console.log(`Running ${process.env.SERVERLESS_VERSION} on ${process.env.SERVERLESS_STAGE} at ${Date.now()}`);
   // return fetch(twitchAuthEndpoint, authOptions).then(res => res.json()).then((auth) => {
   //   if (!auth.access_token) return Promise.resolve();
-    return Promise.all(Object.keys(games).map((gameId) => {
-      const options = { headers: { 'Client-Id': process.env.TWITCH_CLIENT_ID } };
-      return fetch(streamsAPIEndpoint(gameId), options).then(res => res.json()).then(getStream);
-    }));
+  return Promise.all(Object.keys(games).map((gameId) => {
+    const options = { headers: { 'Client-Id': process.env.TWITCH_CLIENT_ID } };
+    return fetch(streamsAPIEndpoint(gameId), options).then(res => res.json()).then(getStream);
+  }));
   // });
 }
 
@@ -116,19 +115,23 @@ function testDiscordWebhook() {
   const user = {
     display_name: 'Test',
     profile_image_url: 'https://placekitten.com/300/300'
-  }
+  };
   const options = webhookOptions(stream, user);
   console.log(options);
-  return fetch(discordWebhookEndpoint, options).then(res => res.json()).then(body => console.log(body));
+  return fetch(discordWebhookEndpoint, options)
+    .then(res => res.json()).then(body => console.log(body));
 }
 
 function testTwitchUsersEndpoint() {
   const options = { headers: { 'Client-Id': process.env.TWITCH_CLIENT_ID } };
-  return fetch(usersAPIEndpoint(133031053), options).then(res => res.json()).then(body => console.log(body));
+  return fetch(usersAPIEndpoint(133031053), options)
+    .then(res => res.json()).then(body => console.log(body));
 }
 
 function testTwitchAuth() {
-  fetch(twitchAuthEndpoint, authOptions).then(res=>res.json()).then(b => console.log(b))
+  fetch(twitchAuthEndpoint, authOptions).then(res => res.json()).then(b => console.log(b));
 }
 
-module.exports = { handler, testDiscordWebhook, testTwitchUsersEndpoint, testTwitchAuth };
+module.exports = {
+  handler, testDiscordWebhook, testTwitchUsersEndpoint, testTwitchAuth
+};
