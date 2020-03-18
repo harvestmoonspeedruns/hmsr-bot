@@ -22,9 +22,9 @@ const webhookOptions = (stream, user) => ({
   body: JSON.stringify({
     embeds: [
       {
-        title: user.display_name,
-        description: `${stream.title}\n\nhttps://twitch.tv/${stream.user_name}`,
-        url: `https://twitch.tv/${stream.user_name}`,
+        title: `${user.display_name}${user.display_name.toLowerCase() !== user.name.toLowerCase() ? ` (${user.name})` : ''}`,
+        description: `${stream.title}\n\nhttps://twitch.tv/${user.name}`,
+        url: `https://twitch.tv/${user.name}`,
         color: 6908265,
         timestamp: new Date(stream.started_at).toISOString(),
         footer: { text: 'Live' },
@@ -59,7 +59,7 @@ function newStreamCreater(stream, previous) {
         streamId: stream.id,
         gameId: stream.game_id,
         userId: stream.user_id,
-        userName: stream.user_name,
+        userName: user.name,
         staredAt: stream.started_at,
         title: stream.title,
       });
@@ -114,6 +114,7 @@ function testDiscordWebhook() {
   };
   const user = {
     display_name: 'Test',
+    name: 'test',
     profile_image_url: 'https://placekitten.com/300/300'
   };
   const options = webhookOptions(stream, user);
