@@ -125,7 +125,7 @@ function testDiscordWebhook() {
 
 function testTwitchUsersEndpoint() {
   const options = { headers: { 'Client-Id': process.env.TWITCH_CLIENT_ID } };
-  return fetch(usersAPIEndpoint(172079222login), options)
+  return fetch(usersAPIEndpoint(172079222), options)
     .then(res => res.json()).then(body => console.log(body));
 }
 
