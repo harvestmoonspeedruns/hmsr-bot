@@ -23,8 +23,8 @@ const webhookOptions = (stream, user) => ({
     embeds: [
       {
         title: `${user.display_name}${user.display_name.toLowerCase() !== user.login.toLowerCase() ? ` (${user.login})` : ''}`,
-        description: `${stream.title}\n\nhttps://twitch.tv/${user.name}`,
-        url: `https://twitch.tv/${user.name}`,
+        description: `${stream.title}\n\nhttps://twitch.tv/${user.login}`,
+        url: `https://twitch.tv/${user.login}`,
         color: 6908265,
         timestamp: new Date(stream.started_at).toISOString(),
         footer: { text: 'Live' },
@@ -125,7 +125,7 @@ function testDiscordWebhook() {
 
 function testTwitchUsersEndpoint() {
   const options = { headers: { 'Client-Id': process.env.TWITCH_CLIENT_ID } };
-  return fetch(usersAPIEndpoint(172079222), options)
+  return fetch(usersAPIEndpoint(172079222login), options)
     .then(res => res.json()).then(body => console.log(body));
 }
 
