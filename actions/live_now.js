@@ -41,9 +41,10 @@ const webhookOptions = (stream, user) => ({
 
 const searchWords = ['wr', '%', 'il', 'speedrun', 'speedruns', 'routing', 'race', 'tas', 'tasing', 'marriage%', 'any%', '100%', '98%', '101', 'hmsr'];
 const avoidWords = ['nohmsr'];
+let authAccessToken = null;
 
 function getUserProfilePicture(userId) {
-  const options = { headers: { 'Client-Id': process.env.TWITCH_CLIENT_ID } };
+  const options = { headers: { Authorization: `Bearer ${authAccessToken}`, 'Client-Id': process.env.TWITCH_CLIENT_ID } };
   return fetch(usersAPIEndpoint(userId), options).then(res => res.json());
 }
 
@@ -95,10 +96,11 @@ function getStream(streams) {
 
 function handler(event, context) {
   console.log(`Running ${process.env.SERVERLESS_VERSION} on ${process.env.SERVERLESS_STAGE} at ${Date.now()}`);
-  // return fetch(twitchAuthEndpoint, authOptions).then(res => res.json()).then((auth) => {
-  //   if (!auth.access_token) return Promise.resolve();
+  return fetch(twitchAuthEndpoint, authOptions).then(res => res.json()).then((auth) => {
+    if (!auth.access_token) return Promise.resolve();
+  authAccessToken = auth.access_token
   return Promise.all(Object.keys(games).map((gameId) => {
-    const options = { headers: { 'Client-Id': process.env.TWITCH_CLIENT_ID } };
+    const options = { headers: { Authorization: `Bearer ${authAccessToken}`, 'Client-Id': process.env.TWITCH_CLIENT_ID } };
     return fetch(streamsAPIEndpoint(gameId), options).then(res => res.json()).then(getStream);
   }));
   // });
@@ -124,15 +126,18 @@ function testDiscordWebhook() {
 }
 
 function testTwitchUsersEndpoint() {
-  const options = { headers: { 'Client-Id': process.env.TWITCH_CLIENT_ID } };
+  const options = { headers: {
+    Authorization: `Bearer ${process.env.TWITCH_OAUTH_ID}`,
+    'Client-Id': process.env.TWITCH_CLIENT_ID,
+  } };
   return fetch(usersAPIEndpoint(172079222), options)
     .then(res => res.json()).then(body => console.log(body));
 }
 
-function testTwitchAuth() {
+function testTwitchOAuth() {
   fetch(twitchAuthEndpoint, authOptions).then(res => res.json()).then(b => console.log(b));
 }
 
 module.exports = {
-  handler, testDiscordWebhook, testTwitchUsersEndpoint, testTwitchAuth
+  handler, testDiscordWebhook, testTwitchUsersEndpoint, testTwitchOAuth
 };
