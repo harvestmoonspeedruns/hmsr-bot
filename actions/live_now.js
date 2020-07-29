@@ -98,12 +98,12 @@ function handler(event, context) {
   console.log(`Running ${process.env.SERVERLESS_VERSION} on ${process.env.SERVERLESS_STAGE} at ${Date.now()}`);
   return fetch(twitchAuthEndpoint, authOptions).then(res => res.json()).then((auth) => {
     if (!auth.access_token) return Promise.resolve();
-  authAccessToken = auth.access_token
-  return Promise.all(Object.keys(games).map((gameId) => {
-    const options = { headers: { Authorization: `Bearer ${authAccessToken}`, 'Client-Id': process.env.TWITCH_CLIENT_ID } };
-    return fetch(streamsAPIEndpoint(gameId), options).then(res => res.json()).then(getStream);
-  }));
-  // });
+    authAccessToken = auth.access_token;
+    return Promise.all(Object.keys(games).map((gameId) => {
+      const options = { headers: { Authorization: `Bearer ${authAccessToken}`, 'Client-Id': process.env.TWITCH_CLIENT_ID } };
+      return fetch(streamsAPIEndpoint(gameId), options).then(res => res.json()).then(getStream);
+    }));
+  });
 }
 
 function testDiscordWebhook() {
@@ -126,10 +126,12 @@ function testDiscordWebhook() {
 }
 
 function testTwitchUsersEndpoint() {
-  const options = { headers: {
-    Authorization: `Bearer ${process.env.TWITCH_OAUTH_ID}`,
-    'Client-Id': process.env.TWITCH_CLIENT_ID,
-  } };
+  const options = {
+    headers: {
+      Authorization: `Bearer ${process.env.TWITCH_OAUTH_ID}`,
+      'Client-Id': process.env.TWITCH_CLIENT_ID,
+    }
+  };
   return fetch(usersAPIEndpoint(172079222), options)
     .then(res => res.json()).then(body => console.log(body));
 }
