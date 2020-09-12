@@ -27,6 +27,6 @@
   "dependencies": {
     "dotenv": "^8.2.0",
     "mongoose": "^5.9.1",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.1"
   }
 }
