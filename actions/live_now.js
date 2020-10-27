@@ -39,7 +39,7 @@ const webhookOptions = (stream, user) => ({
   })
 });
 
-const searchWords = ['wr', '%', 'speedrun', 'speedruns', 'routing', 'tas', 'tasing', 'marriage%', 'any%', '98%', '101', 'hmsr', 'srl'];
+const searchWords = ['wr', '%', 'speedrun', 'speedruns', 'speedrunning', 'routing', 'tas', 'tasing', 'marriage%', 'any%', '98%', '101', 'hmsr', 'srl'];
 const avoidWords = ['nohmsr'];
 let authAccessToken = null;
 
